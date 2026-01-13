@@ -1,23 +1,74 @@
 -- Count customers in each city.
+select city,count(*) number_of_customers from customers	 group by city;
 
 -- Show the total number of orders by order status for the year 2025.
+select order_status,count(*) number_of_order from orders where year(order_date) = 2025 group by order_status;
 
--- List product categories where the average product price is greater than 40,000.
+-- List product categories where the average product price is greater than 400.
+select category,avg(price) average  from products group by category having average > 400;
 
 -- Show cities in Maharashtra that have more than 30 customers.
+select city,count(*) customers from customers where state = "Maharashtra" group by city having   customers > 30;
 
 -- For the year 2024, list months with at least 100 orders.
+select month(order_Date),monthname(order_date) monthname,count(order_id) total_order from  orders 
+where year(order_date)=2024
+group by month(order_Date),monthname(order_date)
+having total_order > 100;
 
 -- For each product category, count products priced above 50,000 and return only those categories with at least 5 such products.
+select category,count(product_id) from products
+where price > 50000
+group by category
+having count(product_id)  >=5;
 
 -- List customers who placed more than 3 orders during 2025.
+select c.customer_id,concat(c.first_name,"",c.last_name) fullname , count(o.order_id)
+from customers c join orders o 
+on c.customer_id  = o.customer_id 
+where year(o.order_date) = 2025
+group by c.customer_id,fullname
+having count(o.order_id) > 3 ;
 
 -- Show brands whose total units sold during 2025 exceed 1,000.
+select p.product_name , sum(od.quantity)
+from products p join order_details od 
+on p.product_id = od.product_id 
+join orders o 
+on o.order_id = od.order_id
+where year(o.order_date) = 2025
+group by p.product_name
+having  sum(od.quantity) > 1000 ;
 
 -- Considering only customers who signed up in 2024, list states where the average customer age is above 30 and there are at least 10 customers.
+select concat(first_name,"",last_name),round(avg(age),0) avg_age from customers
+ where year(signup_date) = 2024 
+group by concat(first_name,"",last_name)
+having avg_age > 30;
 
 -- For shipped orders only, list months where the total discount across all order lines exceeded 5,000.
+select monthname(o.order_Date),sum(od.quantity*od.unit_price*od.discount_percent/100) total_disc
+from orders o  join order_details od
+on o.order_id = od.order_id
+where o.order_status = "Shipped"
+group by monthname(o.order_Date)
+having total_disc > 5000;
 
 -- For returns in 2025, list cities with at least 5 returned line items.
 
+
 -- For 2024, list product sub-categories that sold at least 200 total units and appeared in at least 20 distinct orders.
+select p.sub_category,sum(od.quantity) total_unit , 
+count(distinct od.order_id) distinct_order
+from products p join order_details od
+on p.product_id = od.product_id
+join orders o 
+on o.order_id = od.order_id
+where year(order_date) = 2024
+group by  p.sub_category
+having total_unit > 200 and distinct_order > 20;
+
+
+
+
+
