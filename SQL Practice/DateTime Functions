@@ -1,0 +1,35 @@
+-- Display the year of each customer’s signup date.
+select year(signup_date) from customers ;
+
+-- Show the month name of each order date.
+select monthname(order_date) from orders;
+
+-- Find customers who signed up in the last 6 months.
+select * from customers where str_to_date(signup_date,"%Y-%m-%d") >= date_sub(current_date(), interval 6 month );
+
+-- Calculate the number of days between order date and delivery date.
+select abs(datediff(order_date,delivery_date)) as number_of_days from orders;
+
+-- Extract the weekday name of shipped dates.
+select weekday(shipped_date),dayname(shipped_date) weekname from orders  order by weekday(shipped_date) ;
+
+-- Show all orders placed in February.
+select * from orders where monthname(order_date) = "February";
+
+-- Add 7 days to each order date and display the result.
+select order_date, date_add(order_date, interval 7 day ) seven_days_add_in_order_Date from orders ;
+
+-- Find customers who signed up on a weekend.
+select *,dayname(signup_date) day_name from customers 
+where dayname(signup_date)  in ("Saturday","Sunday");
+
+-- Calculate the age of each order (difference between today’s date and order date).
+select concat(customers.first_name,"",customers.last_name) full_name , timestampdiff(month , orders.order_date,curdate()) as age 
+from orders join customers
+on customers.customer_id = orders.customer_id;
+
+-- Return the year and quarter for each order date.
+select year(order_date) year ,quarter(order_date) quater from orders; 
+
+
+
