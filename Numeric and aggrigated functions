@@ -1,0 +1,31 @@
+-- Round the product price to the nearest whole number.
+select *,ceil(total_price) near_whole_number_using_ceil , 
+floor(total_price) near_whole_number_using_floor from order_details;
+
+-- Return the ceiling of each unit price in order details.
+select *,ceiling(unit_price) from order_details;
+
+-- Return the floor of each total price in order details.
+select *,floor(total_price) from order_details;
+
+-- Show the modulus when dividing customer age by 10.
+select *,age%10 , mod(age,10) from customers;
+
+-- Generate a random number for every product record.
+select *,rand() as random_number from products;
+
+-- Calculate the square root of each product price.
+select price,round(sqrt(price),2) as square_root_of_each_product_price from products;
+
+-- Find the total quantity ordered across all order details.
+select sum(quantity) total_quantity from order_Details; 
+
+-- Find the average discount percent across all orders.
+select avg(discount_percent) as avg_discount_percent from order_details;
+
+-- Return the maximum product price from products.
+select max(price) mamimum_price from products;
+
+-- Return the minimum customer age from customers.
+select min(Age) from customers;
+
